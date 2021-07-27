@@ -253,9 +253,33 @@ void filedetails()
 
 void readfile()
 {
-  printf("Inside readfile function\n");
-
-
+   char *filename,buf[30];
+   int fd,l,h,opt;
+   printf("Enter filename :\n");
+   filename = readline(">");
+   printf("Enter Start and end bytes :\n");
+   scanf("%d",&l);  
+   scanf("%d",&h);
+   fd=open(filename,O_RDWR);
+   
+   lseek(fd,l,SEEK_SET);
+   read(fd,buf,h-l);
+   
+   printf("\nFile content :\n %s \n\n\n",buf);
+   
+   printf("Enter 1 if you want to copy this content to new file :");
+   scanf("%d",&opt);
+   
+   if(opt)
+   {
+     //char *filename;
+     printf("Enter filename :\n");
+     filename = readline(">");
+     fd=open(filename,O_WRONLY|O_CREAT,777);
+     write(fd,buf,h-l);
+     
+   }   
+   close(fd);
 }
 
 int ownCmdHandler(char **parsed)
@@ -439,4 +463,3 @@ int main()
             execArgsPiped(parsedArgs, parsedArgsPiped);
     }
     return 0;
-}
