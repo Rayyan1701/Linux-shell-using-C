@@ -282,9 +282,50 @@ void readfile()
    close(fd);
 }
 
+void reversefile()
+{
+    int fd,fdt,len,i=1,j=0;
+    char filename[30],buff[5],d[50];
+    
+    printf("Enter filename : ");
+    scanf("%s",filename);
+    
+    fd=open(filename,O_RDONLY);
+    fdt=open("tempreverse.txt",O_WRONLY|O_CREAT,777);
+    len = lseek(fd,0,SEEK_END);
+    
+    while(i<len+1 && j<len)
+     {
+       lseek(fd,-(i++),SEEK_END);
+       read(fd,buff,1);
+       printf("%c",buff[0]);
+       //lseek(fdt,j++,SEEK_SET);
+       write(fdt,buff,1);
+     }
+     
+     
+     
+        bzero(d,sizeof(d));
+        strcat(d,"cp tempreverse.txt ");
+      
+        strcat(d,filename);
+        system(d);
+        system("rm -f tempreverse.txt");
+      close(fd);
+     close(fdt);
+    
+     
+    
+    
+    
+
+
+
+}
+
 int ownCmdHandler(char **parsed)
 {
-    int NoOfOwnCmds = 6, i, switchOwnArg = 0;
+    int NoOfOwnCmds = 7, i, switchOwnArg = 0;
     char *ListOfOwnCmds[NoOfOwnCmds];
     char *username;
 
@@ -294,6 +335,7 @@ int ownCmdHandler(char **parsed)
     ListOfOwnCmds[3] = "hello";
     ListOfOwnCmds[4] = "ShowFileDetails";
     ListOfOwnCmds[5] = "ReadFile";
+    ListOfOwnCmds[6] = "ReverseFile";
 
     for (i = 0; i < NoOfOwnCmds; i++)
     {
@@ -327,6 +369,9 @@ int ownCmdHandler(char **parsed)
         return 1;
     case 6:
           readfile();
+          return 1;
+    case 7:
+          reversefile();
           return 1;
     default:
         break;
@@ -458,8 +503,9 @@ int main()
 
         if (execFlag == 1)
             execArgs(parsedArgs);
-
-        if (execFlag == 2)
+             if (execFlag == 2)
             execArgsPiped(parsedArgs, parsedArgsPiped);
     }
+    
     return 0;
+}
